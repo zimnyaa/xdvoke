@@ -7,13 +7,6 @@ import (
 	"unsafe"
 )
 
-var (
-	modntdll          = windows.NewLazySystemDLL("ntdll.dll")
-	modkernel32       = windows.NewLazySystemDLL("kernel32.dll")
-	fRtlQueueWorkItem = modntdll.NewProc("RtlQueueWorkItem")
-	fLoadLibraryW     = modkernel32.NewProc("LoadLibraryW")
-)
-
 
 type ProxyDLLError struct {
 	Err     error
@@ -41,10 +34,25 @@ func (p *DProc) Addr() uintptr {
 }
 
 func NewProxyDLL(name string) (dll *ProxyDLL, err error) {
+	if name == "kernel32.dll" || name == "ntdll.dll" {
+		rdll, _ := windows.LoadDLL(name)
+		d := &ProxyDLL{
+			Name:   name,
+			Handle: rdll.Handle,
+		}
+		return d, nil
+	}
 	namep, err := windows.UTF16PtrFromString(name)
 	if err != nil {
 		return nil, err
 	}
+
+	modntdll, _          := NewProxyDLL("ntdll.dll")
+	modkernel32, _       := NewProxyDLL("kernel32.dll")
+	fRtlQueueWorkItem, _ := modntdll.NewProc("RtlQueueWorkItem")
+	fLoadLibraryW, _     := modkernel32.NewProc("LoadLibraryW")
+
+
 	syscall.Syscall(fRtlQueueWorkItem.Addr(), 3, uintptr(fLoadLibraryW.Addr()), uintptr(unsafe.Pointer(namep)), uintptr(0))
 
 
