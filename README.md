@@ -1,7 +1,8 @@
 # xdvoke
 
 ```
-xdvoke is designed as a drop-in replacement for Golang default "windows" package. This is a PoC implementation. `go run .` to run it.
+xdvoke is designed as a drop-in replacement for Golang default "windows" package. 
+This is a PoC implementation. `go run .` to run it.
 it dynamically resolves the functions by walking the DLL headers.
 DLLs are loaded indirectly with RtlQueueWorkItem, waiting a bit, and then calling the legitimate LoadLibrary function.
 
