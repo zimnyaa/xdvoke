@@ -4,6 +4,7 @@ import (
 	"time"
 	"golang.org/x/sys/windows"
 	"fmt"
+	"strconv"
 	"unsafe"
 )
 
@@ -61,7 +62,7 @@ func (p *DProc) Call(a ...uintptr) (r1, r2 uintptr, lastErr error) {
 	case 15:
 		return syscall.Syscall15(p.Addr(), uintptr(len(a)), a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14])
 	default:
-		panic("Call " + p.Name + " with too many arguments " + itoa(len(a)) + ".")
+		panic("Call " + p.Name + " with too many arguments " + strconv.Itoa(len(a)) + ".")
 	}
 }
 
