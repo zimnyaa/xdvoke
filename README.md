@@ -1,4 +1,4 @@
-# xdvoke
+# `xdvoke` function resolver
 
 ```
 xdvoke is designed as a drop-in replacement for Golang default "windows" package. 
@@ -7,6 +7,8 @@ it dynamically resolves the functions by walking the DLL headers.
 DLLs are loaded indirectly with RtlQueueWorkItem, waiting a bit, and then calling the legitimate LoadLibrary function.
 
 nothing is new, code heavily inspired (stolen) from WireGuard memmod and rad9800.
+
+Yes, you can yoink the resolver Go assembly stubs from acheron, but why would you want to do assembly for it?
 ```
 # code comparison
 ```go
